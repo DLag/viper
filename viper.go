@@ -400,18 +400,22 @@ func Get(key string) interface{} { return v.Get(key) }
 func (v *Viper) Get(key string) interface{} {
 	path := strings.Split(key, v.keyDelim)
 
-	lcaseKey := strings.ToLower(key)
-	val := v.find(lcaseKey)
+	var val interface{}
 
-	if val == nil {
-		source := v.find(path[0])
-		if source == nil {
-			return nil
-		}
-
+	source := v.find(path[0])
+	if source != nil {
 		if reflect.TypeOf(source).Kind() == reflect.Map {
 			val = v.searchMap(cast.ToStringMap(source), path[1:])
 		}
+	}
+
+	if val == nil {
+		lcaseKey := strings.ToLower(key)
+		val = v.find(lcaseKey)
+	}
+
+	if val == nil {
+		return nil
 	}
 
 	var valType interface{}
