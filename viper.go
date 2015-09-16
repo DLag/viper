@@ -401,7 +401,7 @@ func (v *Viper) Get(key string) interface{} {
 	path := strings.Split(key, v.keyDelim)
 
 	var val interface{}
-
+	lcaseKey := strings.ToLower(key)
 	source := v.find(path[0])
 	if source != nil {
 		if reflect.TypeOf(source).Kind() == reflect.Map {
@@ -410,7 +410,6 @@ func (v *Viper) Get(key string) interface{} {
 	}
 
 	if val == nil {
-		lcaseKey := strings.ToLower(key)
 		val = v.find(lcaseKey)
 	}
 
